@@ -1,5 +1,5 @@
 // فقط دو مورد زیر را پر کنید (داخل گیومه‌ها، بدون فاصله اضافه). راهنما: README.md مرحله ۶
 window.CONFIG = {
-  url: "",
-  key: ""
+  url: "https://hqlcqrtmjbnsftvvzknf.supabase.co/rest/v1/",
+  key: "sb_publishable_G6raSBpLPaTjQfOA6somuw_mRajlaFu"
 };
