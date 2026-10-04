@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>بانک طرح درس نماز</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#faf6ec;--ink:#4a4036;--mut:#8a7d6c;--g:#52704c;--gd:#3d5739;--gs:#eef3e6;--au:#b9a068;--ln:#e7dfcd;--rd:#a5483e}
+:root{--bg:#fbf6ef;--ink:#4b3f3a;--mut:#8d7d74;--g:#5f754f;--gd:#43563a;--gs:#f0f2e6;--au:#c4a876;--ln:#eddfd4;--rd:#a5483e;--rs:#f6e8e3}
 *{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.9 Vazirmatn,Tahoma,sans-serif}
 a{color:var(--gd);text-decoration:none}
@@ -47,6 +47,22 @@ input,select,textarea{display:block;width:100%;margin-top:4px;padding:10px 12px;
 .box{background:var(--bg);border-radius:16px;padding:18px;width:min(640px,100%);max-height:92vh;overflow:auto;overflow-wrap:anywhere}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--gd);color:#fff;padding:8px 18px;border-radius:10px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
 #toast.show{opacity:1}#toast.bad{background:var(--rd)}
+body{background-image:radial-gradient(#eddfd3 1px,transparent 1px);background-size:24px 24px}
+header{background:#fbf6efee;backdrop-filter:blur(6px)}
+.brand,h1{font-family:'Aref Ruqaa',Vazirmatn,serif;font-weight:700}.brand{font-size:21px}h1{font-size:28px}.hero h1{font-size:34px}
+.hero{border-bottom:0}.hero p{color:var(--gd)}.lf{display:block;margin:12px auto 0;width:120px;color:var(--au)}
+.card{border-radius:18px;box-shadow:0 2px 12px rgba(125,95,80,.07)}.cat{background:var(--rs);border-color:#efd9d1}.ic{color:#b58279;width:24px;height:24px}
+.stats div{border-radius:16px;background:#fffdf9}.chip{background:var(--rs);color:#8a5f57}.ty{background:var(--gs);color:var(--gd)}
+.b,.ib{border-radius:12px}.box{border-radius:20px}
+.th{width:calc(100% + 32px);margin:-16px -16px 6px;aspect-ratio:16/9;object-fit:cover;border-radius:18px 18px 0 0}
+.cm{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--gd)}
+.fs{border:1px solid var(--ln);border-radius:16px;padding:4px 14px 12px;margin:14px 0;background:#fffdf9;min-width:0}.fs legend{padding:0 8px;color:var(--gd);font-weight:600}
+.lrow{display:grid;gap:6px;padding:10px;border:1px dashed var(--ln);border-radius:12px;margin:8px 0}.lrow input{margin:0}
+.fr{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;padding:8px 0;border-bottom:1px solid var(--ln)}
+.fr>div{flex:1 1 140px;min-width:0}.fr b,.fr small{display:block;overflow-wrap:anywhere}.fr small{color:var(--mut);font-size:12.5px}
+.fi{font-size:24px}.ft{width:52px;height:52px;object-fit:cover;border-radius:10px}.up{margin:0;font-size:15px;color:var(--gd)}
+.vs{margin:14px 0;padding-top:4px;border-top:1px solid var(--ln)}.vs h3{margin:.6em 0 .2em;font-size:16px;color:var(--gd)}.lkb{margin:4px 0 4px 8px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.gal img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px;display:block}
 @media(max-width:560px){.grid{grid-template-columns:1fr}.hero h1{font-size:24px}.acts .b{flex:1;justify-content:center}}
 </style>
 </head>
@@ -66,8 +82,15 @@ esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','
 fa=n=>Number(n).toLocaleString('fa-IR'),dt=d=>new Date(d).toLocaleDateString('fa-IR'),
 norm=s=>String(s||'').replace(/ي/g,'ی').replace(/ك/g,'ک').toLowerCase(),
 TYPES=['طرح درس','داستان','روایت','آیه','حدیث','فعالیت','بازی','کلیپ / ویدئو','کتاب','مقاله','منبع','ایده','سایر'],
-PUB='id,category_id,title,type,summary,objective,body,age_group,duration,materials,source,source_url,tags,created_at';
-let db,cats=[],items=[],admin=false,sess=false,qt;
+PUB='id,category_id,title,type,summary,objective,body,age_group,duration,materials,source,source_url,tags,links,created_at';
+const BK='namaz-files',MAXMB=20,OK=/^(image\/(jpeg|png|webp|gif)|application\/(pdf|zip|msword|vnd\.openxmlformats-officedocument\..+|vnd\.ms-(excel|powerpoint))|text\/plain|audio\/mpeg|video\/mp4)$/,
+fsz=n=>n>=1048576?fa((n/1048576).toFixed(1))+' مگابایت':fa(Math.max(1,Math.round(n/1024)))+' کیلوبایت',
+kind=m=>/^image\//.test(m)?'image':m==='application/pdf'?'pdf':'file',
+okurl=u=>/^https?:\/\//i.test(u||''),
+lrow=l=>`<div class="lrow"><input name="lt" placeholder="عنوان لینک (مثلاً: ویدئو آموزشی)" value="${esc(l?.title)}"><input name="lu" dir="ltr" placeholder="https://..." value="${esc(l?.url)}"><button type="button" class="b dg" data-a="rml">حذف لینک</button></div>`;
+let db,cats=[],items=[],files=[],pend={id:'',rm:[],add:[]},admin=false,sess=false,qt;
+const fof=id=>files.filter(f=>f.content_id===id),
+furl=(f,dl)=>db.storage.from(BK).getPublicUrl(f.path,dl?{download:f.name}:undefined).data.publicUrl;
 
 const kids=p=>cats.filter(c=>c.parent_id===p),byId=id=>cats.find(c=>c.id===id);
 const sub=id=>[id,...kids(id).flatMap(k=>sub(k.id))];
@@ -81,8 +104,8 @@ function toast(m,bad){const t=$('#toast');t.textContent=m;t.className='show'+(ba
 const modal=h=>$('#modal').innerHTML=`<div class="ov" data-a="xo"><div class="box">${h}</div></div>`;
 
 async function load(){
- const [a,b]=await Promise.all([db.from('categories').select('*').order('sort').order('created_at'),db.from('contents').select(admin?'*':PUB).order('created_at',{ascending:false})]);
- if(a.error||b.error)throw a.error||b.error;cats=a.data;items=b.data}
+ const [a,b,c]=await Promise.all([db.from('categories').select('*').order('sort').order('created_at'),db.from('contents').select(admin?'*':PUB).order('created_at',{ascending:false}),db.from('attachments').select('*').order('created_at')]);
+ if(a.error||b.error)throw a.error||b.error;cats=a.data;items=b.data;files=c.error?[]:c.data}
 async function chk(){
  const {data}=await db.auth.getSession();sess=!!data.session;admin=false;
  if(sess){const r=await db.rpc('is_admin');admin=r.data===true}
@@ -90,16 +113,18 @@ async function chk(){
 const refresh=async()=>{await load();await route()};
 
 function tree(p,open){return `<ul class="tr">${kids(p).map(c=>{const k=kids(c.id),a=`<a href="#/c/${c.id}">${esc(c.name)} <small>${fa(cnt(c.id))}</small></a>`;return `<li>${k.length?`<details${open?' open':''}><summary>${a}</summary>${tree(c.id,open)}</details>`:a}</li>`}).join('')}</ul>`}
-const card=i=>`<article class="card"><div class="top"><span class="chip ty">${esc(i.type)}</span><small>${dt(i.created_at)}</small></div><h3>${esc(i.title)}</h3>${i.summary?`<p>${esc(i.summary)}</p>`:''}<div class="meta">${i.age_group?`<span>سن: ${esc(i.age_group)}</span>`:''}${i.duration?`<span>مدت: ${esc(i.duration)}</span>`:''}${i.source?`<span>منبع: ${esc(i.source)}</span>`:''}</div><div class="tags">${(i.tags||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div><div class="acts"><button class="b" data-a="view" data-id="${i.id}">مشاهده</button>${admin?`<button class="b" data-a="edit" data-id="${i.id}">ویرایش</button><button class="b dg" data-a="del" data-id="${i.id}">حذف</button>`:''}</div></article>`;
+const card=i=>{
+ const F=fof(i.id),im=F.filter(f=>kind(f.mime)==='image'),pd=F.filter(f=>kind(f.mime)==='pdf'),ot=F.length-im.length-pd.length,L=(i.links||[]).length;
+ return `<article class="card">${im[0]?`<img class="th" loading="lazy" src="${esc(furl(im[0]))}" alt="">`:''}<div class="top"><span class="chip ty">${esc(i.type)}</span><small>${dt(i.created_at)}</small></div><h3>${esc(i.title)}</h3>${i.summary?`<p>${esc(i.summary)}</p>`:''}<div class="meta">${i.age_group?`<span>سن: ${esc(i.age_group)}</span>`:''}${i.duration?`<span>مدت: ${esc(i.duration)}</span>`:''}${i.source?`<span>منبع: ${esc(i.source)}</span>`:''}</div><div class="tags">${(i.tags||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div>${F.length||L?`<div class="cm">${im.length?`<span>🖼 ${fa(im.length)} عکس</span>`:''}${pd.length?`<span>📄 ${fa(pd.length)} PDF</span>`:''}${ot?`<span>📎 ${fa(ot)} فایل</span>`:''}${L?`<span>🔗 ${fa(L)} لینک</span>`:''}</div>`:''}<div class="acts"><button class="b" data-a="view" data-id="${i.id}">مشاهده</button>${admin?`<button class="b" data-a="edit" data-id="${i.id}">ویرایش</button><button class="b dg" data-a="del" data-id="${i.id}">حذف</button>`:''}</div></article>`};
 const grid=a=>a.length?`<div class="grid">${a.map(card).join('')}</div>`:'<p class="empty">محتوایی در اینجا ثبت نشده است.</p>';
 
 function home(){
  const T=t=>items.filter(i=>i.type===t).length,top=kids(null),
  st=[['دسته‌ها',top.length],['زیرشاخه‌ها',cats.length-top.length],['طرح درس‌ها',T('طرح درس')],['داستان‌ها',T('داستان')],['روایت‌ها',T('روایت')],['فعالیت‌ها',T('فعالیت')],['کل محتواها',items.length]];
- return `<section class="hero"><h1>🕌 بانک طرح درس نماز</h1><p>ایده‌ها، طرح درس‌ها، داستان‌ها و روایت‌های تربیتی نماز</p><small>موضوع کلی: دلایل سهل‌انگاری بچه‌ها در نماز</small></section>
+ return `<section class="hero"><h1>🕌 بانک طرح درس نماز</h1><p>ایده‌ها، طرح درس‌ها، داستان‌ها و روایت‌های تربیتی نماز</p><small>موضوع کلی: دلایل سهل‌انگاری بچه‌ها در نماز</small><svg class="lf" viewBox="0 0 120 16" aria-hidden="true"><path d="M0 8h48M72 8h48" stroke="currentColor" fill="none" stroke-width="1"/><path d="M60 2c7 2 9 9 0 12-9-3-7-10 0-12z" fill="currentColor" opacity=".6"/><path d="M60 3v11" stroke="#fbf6ef" stroke-width=".8"/></svg></section>
  <div class="stats">${st.map(([l,n])=>`<div><b>${fa(n)}</b><span>${l}</span></div>`).join('')}</div>
  ${admin?`<div class="acts"><button class="b pr" data-a="addk" data-id="">+ افزودن دسته‌بندی</button></div>`:''}
- <div class="grid">${top.map(c=>`<a class="card cat" href="#/c/${c.id}"><span class="ic">✦</span><h3>${esc(c.name)}</h3>${c.description?`<p>${esc(c.description)}</p>`:''}<small>${fa(cnt(c.id))} محتوا · ${fa(kids(c.id).length)} زیرشاخه</small></a>`).join('')}</div>
+ <div class="grid">${top.map(c=>`<a class="card cat" href="#/c/${c.id}"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 19c0-8 5-14 14-14 0 9-6 14-14 14zM5 19l8-8"/></svg><h3>${esc(c.name)}</h3>${c.description?`<p>${esc(c.description)}</p>`:''}<small>${fa(cnt(c.id))} محتوا · ${fa(kids(c.id).length)} زیرشاخه</small></a>`).join('')}</div>
  <h2>آخرین محتواهای اضافه‌شده</h2>${grid(items.slice(0,6))}`}
 
 function catPage(c){
@@ -125,22 +150,69 @@ async function route(){
  $('#tw').innerHTML=tree(null,0);
  if(a==='s'&&$('#q').value!==(P.get('q')||''))$('#q').value=P.get('q')||'';
  if(a==='login')A.innerHTML=`<section class="narrow"><h1>ورود مدیر</h1><form data-f="l"><label>ایمیل<input name="email" type="email" dir="ltr" required></label><label>رمز عبور<input name="password" type="password" dir="ltr" required></label><button class="b pr">ورود</button></form></section>`;
- else if(a==='admin'&&admin)A.innerHTML=`<h1>مدیریت</h1><div class="acts"><button class="b pr" data-a="addk" data-id="">+ افزودن دسته‌بندی</button></div><div class="panel"><h2>پشتیبان‌گیری</h2><p class="lead">یک فایل کامل از همه دسته‌ها و محتواها بگیرید یا فایل پشتیبان را برگردانید.</p><div class="acts"><button class="b" data-a="exp">خروجی گرفتن از اطلاعات</button><button class="b" data-a="imp0">وارد کردن اطلاعات</button></div></div><input type="file" id="fi" accept=".json,application/json" hidden>`;
+ else if(a==='admin'&&admin)A.innerHTML=`<h1>مدیریت</h1><div class="acts"><button class="b pr" data-a="addk" data-id="">+ افزودن دسته‌بندی</button></div><div class="panel"><h2>پشتیبان‌گیری</h2><p class="lead">یک فایل کامل از همه دسته‌ها و محتواها بگیرید یا فایل پشتیبان را برگردانید. خودِ عکس‌ها و PDFها در Storage می‌مانند و داخل فایل پشتیبان نیستند؛ فقط فهرستشان در آن هست.</p><div class="acts"><button class="b" data-a="exp">خروجی گرفتن از اطلاعات</button><button class="b" data-a="imp0">وارد کردن اطلاعات</button></div></div><input type="file" id="fi" accept=".json,application/json" hidden>`;
  else if(a==='c'&&byId(id))A.innerHTML=catPage(byId(id));
  else if(a==='s')A.innerHTML=search(P);
  else A.innerHTML=home()}
 
 const fld=(n,l,v='',k='i')=>`<label>${l}${k==='t'?`<textarea name="${n}" rows="${n==='body'?8:3}">${esc(v)}</textarea>`:`<input name="${n}" value="${esc(v)}"${n==='title'||n==='name'?' required':''}${n==='age_group'?' list="ages"':''}${n==='source_url'?' dir="ltr"':''}>`}</label>`;
 function cform(id,catId){
- const i=items.find(x=>x.id===id)||{};
- modal(`<h2>${id?'ویرایش محتوا':'افزودن محتوا'}</h2><form data-f="c" data-id="${id||''}">${fld('title','عنوان محتوا *',i.title)}
- <label>نوع محتوا<select name="type">${TYPES.map(t=>`<option${t===i.type?' selected':''}>${t}</option>`).join('')}</select></label>
- <label>دسته / زیرشاخه *<select name="category_id" required>${opts(i.category_id||catId)}</select></label>
- ${fld('summary','توضیح کوتاه',i.summary,'t')}${fld('objective','هدف آموزشی',i.objective,'t')}${fld('body','متن کامل',i.body,'t')}
- ${fld('age_group','گروه سنی',i.age_group)}<datalist id="ages"><option>کودکان</option><option>نوجوانان</option><option>همه سنین</option></datalist>
- ${fld('duration','مدت زمان',i.duration)}${fld('materials','وسایل مورد نیاز',i.materials,'t')}${fld('source','منبع',i.source)}${fld('source_url','لینک منبع',i.source_url)}
- ${fld('notes','یادداشت شخصی (فقط مدیر می‌بیند)',i.notes,'t')}${fld('tags','برچسب‌ها (با ویرگول جدا کنید)',(i.tags||[]).join('، '))}
- <div class="acts"><button class="b pr">ذخیره</button><button type="button" class="b" data-a="x">انصراف</button></div></form>`)}
+ const i=items.find(x=>x.id===id)||{},S=(n,t,b)=>`<fieldset class="fs"><legend>${n}. ${t}</legend>${b}</fieldset>`,up=(t,a)=>`<label class="b up">${t}<input type="file" hidden multiple data-fi ${a}></label>`;
+ pend={id:id||'',rm:[],add:[]};
+ modal(`<h2>${id?'ویرایش محتوا':'افزودن محتوا'}</h2><form data-f="c" data-id="${id||''}">
+ ${S('۱','اطلاعات اصلی',fld('title','عنوان محتوا *',i.title)+`<label>نوع محتوا<select name="type">${TYPES.map(t=>`<option${t===i.type?' selected':''}>${t}</option>`).join('')}</select></label><label>دسته / زیرشاخه *<select name="category_id" required>${opts(i.category_id||catId)}</select></label>`+fld('summary','توضیح کوتاه',i.summary,'t')+fld('objective','هدف آموزشی',i.objective,'t')+fld('body','متن کامل',i.body,'t'))}
+ ${S('۲','اطلاعات آموزشی',fld('age_group','گروه سنی',i.age_group)+'<datalist id="ages"><option>کودکان</option><option>نوجوانان</option><option>همه سنین</option></datalist>'+fld('duration','مدت زمان',i.duration)+fld('materials','وسایل مورد نیاز',i.materials,'t')+fld('tags','برچسب‌ها (با ویرگول جدا کنید)',(i.tags||[]).join('، ')))}
+ ${S('۳','منابع',fld('source','منبع',i.source)+fld('source_url','لینک منبع',i.source_url)+`<label>لینک‌های دیگر (ویدئو، سایت، Google Drive ...)</label><div id="lk">${(i.links||[]).map(l=>lrow(l)).join('')}</div><button type="button" class="b" data-a="addl">+ افزودن لینک</button>`)}
+ ${S('۴','فایل‌های ضمیمه',`<div id="fl"></div><div class="acts">${up('+ عکس','accept="image/*"')}${up('+ PDF','accept="application/pdf"')}${up('+ فایل دیگر','')}</div><small class="lead">هر فایل حداکثر ${fa(MAXMB)} مگابایت. عکس‌ها خودکار سبک می‌شوند.</small>`)}
+ ${S('۵','یادداشت',fld('notes','یادداشت شخصی (فقط مدیر می‌بیند)',i.notes,'t'))}
+ <div class="acts"><button class="b pr" id="sv">ذخیره</button><button type="button" class="b" data-a="x">انصراف</button></div></form>`);
+ fl()}
+function fl(){
+ const th=(m,u)=>u?`<img class="ft" src="${esc(u)}" alt="">`:`<span class="fi">${kind(m)==='pdf'?'📄':'📎'}</span>`,
+ R=(t,n,m,sz,a)=>`<div class="fr">${t}<div><b>${esc(n)}</b><small>${m} · ${fsz(sz)}</small></div><button type="button" class="b dg" ${a}>حذف</button></div>`;
+ $('#fl').innerHTML=fof(pend.id).filter(f=>!pend.rm.includes(f.id)).map(f=>R(th(f.mime,kind(f.mime)==='image'?furl(f):''),f.name,'ذخیره‌شده',f.size,`data-a="rmf" data-id="${f.id}"`)).join('')+pend.add.map((p,n)=>R(th(p.f.type,p.u),p.f.name,'پیش‌نمایش (هنوز آپلود نشده)',p.f.size,`data-a="rma" data-id="${n}"`)).join('')||'<p class="lead">فایلی انتخاب نشده است.</p>'}
+function rmf(id){if(confirm('این فایل بعد از زدن «ذخیره» برای همیشه حذف می‌شود. ادامه می‌دهید؟')){pend.rm.push(id);fl()}}
+function rma(n){pend.add.splice(+n,1);fl()}
+async function shrink(f){
+ if(!/^image\/(jpeg|png|webp)$/.test(f.type))return f;
+ const b=await createImageBitmap(f),r=Math.min(1,1600/Math.max(b.width,b.height));
+ if(r===1&&f.size<8e5)return f;
+ const c=document.createElement('canvas'),x=c.getContext('2d');c.width=Math.round(b.width*r);c.height=Math.round(b.height*r);
+ x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(b,0,0,c.width,c.height);
+ const o=await new Promise(k=>c.toBlob(k,'image/jpeg',.85));
+ return o&&o.size<f.size?new File([o],f.name.replace(/\.\w+$/,'')+'.jpg',{type:'image/jpeg'}):f}
+async function addf(L){
+ for(let f of L){
+  if(!OK.test(f.type)){toast('نوع فایل «'+f.name+'» پشتیبانی نمی‌شود',1);continue}
+  try{f=await shrink(f)}catch(x){}
+  if(f.size>MAXMB*1048576){toast('«'+f.name+'» بزرگ‌تر از '+fa(MAXMB)+' مگابایت است',1);continue}
+  pend.add.push({f,u:kind(f.type)==='image'?URL.createObjectURL(f):''})}
+ fl()}
+async function saveC(f,d,id){
+ d.tags=d.tags.split(/[,،]/).map(s=>s.trim()).filter(Boolean);d.source_url=d.source_url.trim();
+ const lt=[...f.querySelectorAll('[name=lt]')],lu=[...f.querySelectorAll('[name=lu]')];delete d.lt;delete d.lu;
+ d.links=lu.map((u,n)=>({title:lt[n].value.trim(),url:u.value.trim()})).filter(l=>l.url||l.title);
+ const bad=d.links.find(l=>!okurl(l.url));
+ if(bad)throw Error('آدرس لینک «'+(bad.title||bad.url)+'» باید با http:// یا https:// شروع شود');
+ if(d.source_url&&!okurl(d.source_url))throw Error('لینک منبع باید با http:// یا https:// شروع شود');
+ const sv=$('#sv');sv.disabled=true;sv.textContent='در حال ذخیره...';
+ try{
+  const r=id?await db.from('contents').update(d).eq('id',id).select('id').single():await db.from('contents').insert(d).select('id').single();
+  if(r.error)throw r.error;
+  const cid=r.data.id,E=[];
+  for(const fid of pend.rm){
+   const a=files.find(x=>x.id===fid);if(!a)continue;
+   const e=await db.from('attachments').delete().eq('id',fid);
+   if(e.error)E.push(a.name);else{const s=await db.storage.from(BK).remove([a.path]);if(s.error)E.push(a.name+' (حذف از Storage)')}}
+  for(const p of pend.add){
+   const ext=(p.f.name.match(/\.([A-Za-z0-9]{1,5})$/)||[,'bin'])[1].toLowerCase(),path=`${cid}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`,
+   u=await db.storage.from(BK).upload(path,p.f,{contentType:p.f.type});
+   if(u.error){E.push(p.f.name);continue}
+   const e=await db.from('attachments').insert({content_id:cid,name:p.f.name,path,mime:p.f.type,size:p.f.size});
+   if(e.error){await db.storage.from(BK).remove([path]);E.push(p.f.name)}}
+  await refresh();A.x();
+  E.length?toast('ذخیره شد، اما این فایل‌ها مشکل داشتند: '+E.join('، '),1):toast('ذخیره شد')
+ }finally{sv.disabled=false;sv.textContent='ذخیره'}}
 function kform(id,parent){
  const c=byId(id)||{};
  modal(`<h2>${id?'ویرایش دسته':parent?'افزودن زیرشاخه':'افزودن دسته‌بندی'}</h2><form data-f="k" data-id="${id||''}">${fld('name','نام *',c.name)}${fld('description','توضیح',c.description,'t')}
@@ -148,32 +220,46 @@ function kform(id,parent){
  <div class="acts"><button class="b pr">ذخیره</button><button type="button" class="b" data-a="x">انصراف</button></div></form>`)}
 function view(id){
  const i=items.find(x=>x.id===id);if(!i)return;
- const row=(l,v)=>v?`<h4>${l}</h4><p class="pre">${esc(v)}</p>`:'';
+ const row=(l,v)=>v?`<h4>${l}</h4><p class="pre">${esc(v)}</p>`:'',sec=(t,b)=>b?`<section class="vs"><h3>${t}</h3>${b}</section>`:'',
+ F=fof(i.id),im=F.filter(f=>kind(f.mime)==='image'),pd=F.filter(f=>kind(f.mime)==='pdf'),ot=F.filter(f=>kind(f.mime)==='file'),
+ lk=[...(okurl(i.source_url)?[{title:'لینک منبع',url:i.source_url}]:[]),...(i.links||[]).filter(l=>okurl(l.url))],
+ fr=f=>`<div class="fr"><span class="fi">${kind(f.mime)==='pdf'?'📄':'📎'}</span><div><b>${esc(f.name)}</b><small>${esc(f.name.split('.').pop().toUpperCase())} · ${fsz(f.size)} · ${dt(f.created_at)}</small></div><a class="b" href="${esc(furl(f))}" target="_blank" rel="noopener">مشاهده</a><a class="b" href="${esc(furl(f,1))}">دانلود</a></div>`;
  modal(`<h2>${esc(i.title)}</h2><div class="tags"><span class="chip ty">${esc(i.type)}</span>${path(i.category_id).map(c=>`<span class="chip">${esc(c.name)}</span>`).join('')}</div>
- ${row('توضیح کوتاه',i.summary)}${row('هدف آموزشی',i.objective)}${row('متن کامل',i.body)}${row('گروه سنی',i.age_group)}${row('مدت زمان',i.duration)}${row('وسایل مورد نیاز',i.materials)}${row('منبع',i.source)}
- ${/^https?:\/\//i.test(i.source_url||'')?`<p><a href="${esc(i.source_url)}" target="_blank" rel="noopener">لینک منبع</a></p>`:''}${admin?row('یادداشت شخصی',i.notes):''}
+ ${i.summary?`<p class="lead">${esc(i.summary)}</p>`:''}
+ ${sec('اطلاعات آموزشی',row('هدف آموزشی',i.objective)+row('گروه سنی',i.age_group)+row('مدت زمان',i.duration)+row('وسایل مورد نیاز',i.materials))}
+ ${sec('متن کامل',i.body?`<p class="pre">${esc(i.body)}</p>`:'')}${sec('منابع',row('منبع',i.source))}
+ ${sec('لینک‌ها',lk.map(l=>`<a class="b lkb" href="${esc(l.url)}" target="_blank" rel="noopener">🔗 ${esc(l.title||l.url)}</a>`).join(''))}
+ ${sec('تصاویر',im.length?`<div class="gal">${im.map(f=>`<a href="${esc(furl(f))}" target="_blank" rel="noopener"><img loading="lazy" src="${esc(furl(f))}" alt="${esc(f.name)}"></a>`).join('')}</div>`:'')}
+ ${sec('فایل‌های PDF',pd.map(fr).join(''))}${sec('سایر فایل‌های ضمیمه',ot.map(fr).join(''))}
+ ${admin?sec('یادداشت شخصی',i.notes?`<p class="pre">${esc(i.notes)}</p>`:''):''}
  <div class="tags">${(i.tags||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div><p class="meta">تاریخ افزودن: ${dt(i.created_at)}</p><button class="b" data-a="x">بستن</button>`)}
-
+async function purge(cids){
+ const P=files.filter(f=>cids.includes(f.content_id)).map(f=>f.path);
+ if(!P.length)return false;
+ try{const s=await db.storage.from(BK).remove(P);return !!s.error}catch(x){return true}}
+const WARN='حذف شد، اما حذف بعضی فایل‌ها از Storage ناموفق بود (اطلاعات سایت سالم است).';
 async function del(id){
- const i=items.find(x=>x.id===id);if(!confirm(`«${i.title}» حذف شود؟ این کار برگشت‌پذیر نیست.`))return;
- const r=await db.from('contents').delete().eq('id',id);if(r.error)throw r.error;toast('حذف شد');await refresh()}
+ const i=items.find(x=>x.id===id),n=fof(id).length;
+ if(!confirm(`«${i.title}» حذف شود؟`+(n?`\nهمراه آن ${fa(n)} فایل ضمیمه هم حذف می‌شود.`:'')+'\nاین کار برگشت‌پذیر نیست.'))return;
+ const r=await db.from('contents').delete().eq('id',id);if(r.error)throw r.error;
+ const e=await purge([id]);toast(e?WARN:'حذف شد',e);await refresh()}
 async function delk(id){
- const c=byId(id),s=sub(id),n=items.filter(i=>s.includes(i.category_id)).length;
- if(!confirm(`دسته «${c.name}» حذف شود؟`+(s.length>1||n?`\n\nهشدار: همراه آن ${fa(s.length-1)} زیرشاخه و ${fa(n)} محتوا نیز برای همیشه حذف می‌شود.`:'')))return;
+ const c=byId(id),s=sub(id),ci=items.filter(i=>s.includes(i.category_id)).map(i=>i.id),n=ci.length;
+ if(!confirm(`دسته «${c.name}» حذف شود؟`+(s.length>1||n?`\n\nهشدار: همراه آن ${fa(s.length-1)} زیرشاخه و ${fa(n)} محتوا (با همه فایل‌های ضمیمه‌شان) برای همیشه حذف می‌شود.`:'')))return;
  const r=await db.from('categories').delete().eq('id',id);if(r.error)throw r.error;
- await load();location.hash=c.parent_id?'#/c/'+c.parent_id:'#/';await route();toast('حذف شد')}
+ const e=await purge(ci);await load();location.hash=c.parent_id?'#/c/'+c.parent_id:'#/';await route();toast(e?WARN:'حذف شد',e)}
 function exp(){
- const b=new Blob([JSON.stringify({version:1,categories:cats,contents:items},null,1)],{type:'application/json'}),a=document.createElement('a');
+ const b=new Blob([JSON.stringify({version:2,categories:cats,contents:items,attachments:files},null,1)],{type:'application/json'}),a=document.createElement('a');
  a.href=URL.createObjectURL(b);a.download='namaz-bank-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
 async function imp(f){
  if(!f)return;const d=JSON.parse(await f.text());
  if(!Array.isArray(d.categories)||!Array.isArray(d.contents))throw Error('فایل پشتیبان معتبر نیست');
  if(!confirm(`${fa(d.categories.length)} دسته و ${fa(d.contents.length)} محتوا وارد شود؟ موارد هم‌شناسه به‌روزرسانی می‌شوند.`))return;
- for(const [t,rows] of [['categories',d.categories.map(c=>({...c,parent_id:null}))],['categories',d.categories],['contents',d.contents]])
+ for(const [t,rows] of [['categories',d.categories.map(c=>({...c,parent_id:null}))],['categories',d.categories],['contents',d.contents],['attachments',d.attachments||[]]])
   for(let n=0;n<rows.length;n+=200){const r=await db.from(t).upsert(rows.slice(n,n+200));if(r.error)throw r.error}
  toast('اطلاعات وارد شد');await refresh()}
 
-const A={
+const A={addl:()=>$('#lk').insertAdjacentHTML('beforeend',lrow()),rml:(_,b)=>b.closest('.lrow').remove(),rmf,rma,
  x:()=>$('#modal').innerHTML='',menu:()=>document.body.classList.toggle('mo'),view,del,delk,exp,
  edit:id=>cform(id),addc:id=>cform('',id),addk:id=>kform('',id),editk:id=>kform(id),imp0:()=>$('#fi').click(),
  lg:async()=>{if(sess){await db.auth.signOut();await chk();location.hash='#/';await route()}else location.hash='#/login'}};
@@ -181,14 +267,15 @@ document.addEventListener('click',e=>{
  if(e.target.closest('#tw a'))document.body.classList.remove('mo');
  const b=e.target.closest('[data-a]');if(!b)return;
  if(b.dataset.a==='xo'){if(b===e.target)A.x();return}
- run(()=>A[b.dataset.a]?.(b.dataset.id))});
+ run(()=>A[b.dataset.a]?.(b.dataset.id,b))});
 document.addEventListener('submit',e=>{e.preventDefault();run(async()=>{
  const f=e.target,d=Object.fromEntries(new FormData(f)),id=f.dataset.id,k=f.dataset.f;let r;
  if(k==='l'){r=await db.auth.signInWithPassword({email:d.email.trim(),password:d.password});if(r.error)throw r.error;await chk();location.hash='#/';await route();toast('وارد شدید');return}
- if(k==='c'){d.tags=d.tags.split(/[,،]/).map(s=>s.trim()).filter(Boolean);d.source_url=d.source_url.trim();r=id?await db.from('contents').update(d).eq('id',id):await db.from('contents').insert(d)}
+ if(k==='c'){await saveC(f,d,id);return}
  if(k==='k'){d.parent_id=d.parent_id||null;if(!id)d.sort=kids(d.parent_id).length+1;r=id?await db.from('categories').update(d).eq('id',id):await db.from('categories').insert(d)}
  if(r.error)throw r.error;await refresh();A.x();toast('ذخیره شد')})});
 document.addEventListener('change',e=>{
+ if(e.target.hasAttribute('data-fi')){const L=[...e.target.files];e.target.value='';run(()=>addf(L));return}
  if(e.target.id==='fi'){const f=e.target.files[0];e.target.value='';run(()=>imp(f));return}
  const s=e.target.dataset.fl;if(!s)return;
  const P=new URLSearchParams(location.hash.split('?')[1]||'');P.set(s,e.target.value);location.hash='#/s?'+P});
@@ -199,7 +286,7 @@ $('#q').addEventListener('input',()=>{clearTimeout(qt);qt=setTimeout(()=>{
 (async()=>{
  if(!C.url||!C.key){$('#app').innerHTML='<div class="panel"><h2>راه‌اندازی هنوز کامل نشده</h2><p>فایل config.js را طبق راهنمای README تکمیل کنید.</p></div>';return}
  try{db=supabase.createClient(C.url.trim(),C.key.trim());await chk();await route()}
- catch(x){$('#app').innerHTML=`<div class="panel"><h2>اتصال به دیتابیس برقرار نشد</h2><p>${esc(x.message)}</p><p>آدرس و کلید داخل config.js و اجرای کامل schema.sql را بررسی کنید.</p></div>`}
+ catch(x){$('#app').innerHTML=`<div class="panel"><h2>اتصال به دیتابیس برقرار نشد</h2><p>${esc(x.message)}</p><p>آدرس و کلید داخل config.js و اجرای فایل‌های schema.sql و migration-v2.sql را بررسی کنید.</p></div>`}
  addEventListener('hashchange',()=>run(async()=>{await route();scrollTo(0,0)}));
 })();
 </script>
