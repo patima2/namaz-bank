@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>بانک طرح درس نماز</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf6ec;--ink:#4a4036;--mut:#8a7d6c;--g:#52704c;--gd:#3d5739;--gs:#eef3e6;--au:#b9a068;--ln:#e7dfcd;--rd:#a5483e}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.9 Vazirmatn,Tahoma,sans-serif}
+a{color:var(--gd);text-decoration:none}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln);padding:8px 14px}
+.bar{display:flex;gap:8px;align-items:center;max-width:1100px;margin:0 auto 6px}
+.sp{flex:1}.brand{font-weight:800;font-size:18px;color:var(--gd)}
+#q{width:100%;padding:10px 14px;border:1px solid var(--ln);border-radius:12px;background:#fff;font:inherit;font-size:16px;color:var(--ink)}
+main{max-width:1100px;margin:0 auto;padding:18px 14px 70px}
+h1{font-size:26px;margin:.3em 0;color:var(--gd);font-weight:800}h2{font-size:19px;margin:1.4em 0 .5em;color:var(--gd)}h4{margin:1em 0 0;color:var(--g)}
+.lead,.empty{color:var(--mut)}.pre{white-space:pre-wrap;margin:.2em 0}
+.b,.ib{font:inherit;font-size:15px;min-height:44px;padding:0 16px;border:1px solid var(--ln);border-radius:10px;background:#fff;color:var(--gd);cursor:pointer;display:inline-flex;align-items:center}
+.ib{padding:0 12px;font-size:20px}.pr{background:var(--g);color:#fff;border-color:var(--g)}.dg{color:var(--rd)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.hero{text-align:center;padding:26px 8px 18px;border-bottom:1px solid var(--au);margin-bottom:18px}
+.hero h1{font-size:30px}.hero p{margin:0;font-size:17px}.hero small{color:var(--mut)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:18px}
+.stats div{background:#fff;border:1px solid var(--ln);border-radius:12px;padding:10px;text-align:center}
+.stats b{display:block;font-size:22px;color:var(--g)}.stats span{font-size:13px;color:var(--mut)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px;min-width:0;overflow-wrap:anywhere;color:var(--ink)}
+.card h3{margin:0;font-size:17px;font-weight:600}.card p{margin:0;color:var(--mut);font-size:14.5px}
+.cat{background:var(--gs)}.ic{color:var(--au);font-size:22px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--mut)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}.chip{background:var(--gs);border-radius:20px;padding:0 10px;font-size:13px;color:var(--gd)}.ty{background:#f3ead2;color:#7a6532}
+.card .acts{margin:auto 0 0;padding-top:8px}
+.panel{background:#fff;border:1px solid var(--ln);border-radius:14px;padding:6px 16px 12px;margin:12px 0;overflow-wrap:anywhere}
+.narrow{max-width:420px;margin:0 auto}
+.bc{display:flex;flex-wrap:wrap;gap:6px;font-size:14px;color:var(--mut)}
+ul.tr{list-style:none;margin:0;padding-inline-start:18px}.panel>ul.tr,#tw>ul.tr{padding:0}
+.tr li{margin:4px 0}.tr summary{cursor:pointer}.tr small{color:var(--mut)}
+label{display:block;margin:10px 0;font-size:14px;color:var(--mut)}
+input,select,textarea{display:block;width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--ln);border-radius:10px;font:inherit;font-size:16px;background:#fff;color:var(--ink)}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0}.filters select{margin:0}
+#dr{position:fixed;top:0;right:0;bottom:0;width:min(86vw,340px);background:var(--bg);transform:translateX(100%);transition:transform .2s;z-index:20;overflow:auto;padding:16px;border-left:1px solid var(--ln)}
+#sc{display:none;position:fixed;inset:0;background:#0004;z-index:19}.mo #dr{transform:none}.mo #sc{display:block}
+.ov{position:fixed;inset:0;background:#0005;z-index:30;display:flex;align-items:center;justify-content:center;padding:10px}
+.box{background:var(--bg);border-radius:16px;padding:18px;width:min(640px,100%);max-height:92vh;overflow:auto;overflow-wrap:anywhere}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--gd);color:#fff;padding:8px 18px;border-radius:10px;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.show{opacity:1}#toast.bad{background:var(--rd)}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.hero h1{font-size:24px}.acts .b{flex:1;justify-content:center}}
+</style>
+</head>
+<body>
+<header>
+ <div class="bar"><button class="ib" data-a="menu" aria-label="منو">☰</button><a class="brand" href="#/">بانک طرح درس نماز</a><span class="sp"></span><a id="adm" class="b" href="#/admin" hidden>مدیریت</a><button id="lg" class="b" data-a="lg">ورود مدیر</button></div>
+ <div class="bar"><input id="q" type="search" placeholder="جستجو بین طرح درس‌ها، داستان‌ها، روایت‌ها و موضوعات..."></div>
+</header>
+<aside id="dr"><div class="acts"><b>دسته‌بندی‌ها</b><span class="sp"></span><button class="ib" data-a="menu">✕</button></div><div id="tw"></div></aside><div id="sc" data-a="menu"></div>
+<main id="app"><p class="empty">در حال بارگذاری...</p></main>
+<div id="modal"></div><div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+const C=window.CONFIG||{},$=s=>document.querySelector(s),
+esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),
+fa=n=>Number(n).toLocaleString('fa-IR'),dt=d=>new Date(d).toLocaleDateString('fa-IR'),
+norm=s=>String(s||'').replace(/ي/g,'ی').replace(/ك/g,'ک').toLowerCase(),
+TYPES=['طرح درس','داستان','روایت','آیه','حدیث','فعالیت','بازی','کلیپ / ویدئو','کتاب','مقاله','منبع','ایده','سایر'],
+PUB='id,category_id,title,type,summary,objective,body,age_group,duration,materials,source,source_url,tags,created_at';
+let db,cats=[],items=[],admin=false,sess=false,qt;
+
+const kids=p=>cats.filter(c=>c.parent_id===p),byId=id=>cats.find(c=>c.id===id);
+const sub=id=>[id,...kids(id).flatMap(k=>sub(k.id))];
+const cnt=id=>{const s=sub(id);return items.filter(i=>s.includes(i.category_id)).length};
+const path=id=>{const p=[];for(let c=byId(id);c;c=byId(c.parent_id))p.unshift(c);return p};
+const flat=(p=null,d=0)=>kids(p).flatMap(c=>[{c,d},...flat(c.id,d+1)]);
+const opts=(sel,ex=[],first='')=>first+flat().filter(x=>!ex.includes(x.c.id)).map(({c,d})=>`<option value="${c.id}"${c.id===sel?' selected':''}>${'– '.repeat(d)}${esc(c.name)}</option>`).join('');
+const msg=x=>/invalid/i.test(x.message)?'ایمیل یا رمز عبور اشتباه است.':/row-level|42501|permission/i.test(x.message+x.code)?'دسترسی ندارید؛ دوباره وارد شوید.':'خطا: '+(x.message||x);
+const run=async f=>{try{await f()}catch(x){toast(msg(x),1)}};
+function toast(m,bad){const t=$('#toast');t.textContent=m;t.className='show'+(bad?' bad':'');clearTimeout(toast.h);toast.h=setTimeout(()=>t.className='',3200)}
+const modal=h=>$('#modal').innerHTML=`<div class="ov" data-a="xo"><div class="box">${h}</div></div>`;
+
+async function load(){
+ const [a,b]=await Promise.all([db.from('categories').select('*').order('sort').order('created_at'),db.from('contents').select(admin?'*':PUB).order('created_at',{ascending:false})]);
+ if(a.error||b.error)throw a.error||b.error;cats=a.data;items=b.data}
+async function chk(){
+ const {data}=await db.auth.getSession();sess=!!data.session;admin=false;
+ if(sess){const r=await db.rpc('is_admin');admin=r.data===true}
+ $('#lg').textContent=sess?'خروج':'ورود مدیر';$('#adm').hidden=!admin;await load()}
+const refresh=async()=>{await load();await route()};
+
+function tree(p,open){return `<ul class="tr">${kids(p).map(c=>{const k=kids(c.id),a=`<a href="#/c/${c.id}">${esc(c.name)} <small>${fa(cnt(c.id))}</small></a>`;return `<li>${k.length?`<details${open?' open':''}><summary>${a}</summary>${tree(c.id,open)}</details>`:a}</li>`}).join('')}</ul>`}
+const card=i=>`<article class="card"><div class="top"><span class="chip ty">${esc(i.type)}</span><small>${dt(i.created_at)}</small></div><h3>${esc(i.title)}</h3>${i.summary?`<p>${esc(i.summary)}</p>`:''}<div class="meta">${i.age_group?`<span>سن: ${esc(i.age_group)}</span>`:''}${i.duration?`<span>مدت: ${esc(i.duration)}</span>`:''}${i.source?`<span>منبع: ${esc(i.source)}</span>`:''}</div><div class="tags">${(i.tags||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div><div class="acts"><button class="b" data-a="view" data-id="${i.id}">مشاهده</button>${admin?`<button class="b" data-a="edit" data-id="${i.id}">ویرایش</button><button class="b dg" data-a="del" data-id="${i.id}">حذف</button>`:''}</div></article>`;
+const grid=a=>a.length?`<div class="grid">${a.map(card).join('')}</div>`:'<p class="empty">محتوایی در اینجا ثبت نشده است.</p>';
+
+function home(){
+ const T=t=>items.filter(i=>i.type===t).length,top=kids(null),
+ st=[['دسته‌ها',top.length],['زیرشاخه‌ها',cats.length-top.length],['طرح درس‌ها',T('طرح درس')],['داستان‌ها',T('داستان')],['روایت‌ها',T('روایت')],['فعالیت‌ها',T('فعالیت')],['کل محتواها',items.length]];
+ return `<section class="hero"><h1>🕌 بانک طرح درس نماز</h1><p>ایده‌ها، طرح درس‌ها، داستان‌ها و روایت‌های تربیتی نماز</p><small>موضوع کلی: دلایل سهل‌انگاری بچه‌ها در نماز</small></section>
+ <div class="stats">${st.map(([l,n])=>`<div><b>${fa(n)}</b><span>${l}</span></div>`).join('')}</div>
+ ${admin?`<div class="acts"><button class="b pr" data-a="addk" data-id="">+ افزودن دسته‌بندی</button></div>`:''}
+ <div class="grid">${top.map(c=>`<a class="card cat" href="#/c/${c.id}"><span class="ic">✦</span><h3>${esc(c.name)}</h3>${c.description?`<p>${esc(c.description)}</p>`:''}<small>${fa(cnt(c.id))} محتوا · ${fa(kids(c.id).length)} زیرشاخه</small></a>`).join('')}</div>
+ <h2>آخرین محتواهای اضافه‌شده</h2>${grid(items.slice(0,6))}`}
+
+function catPage(c){
+ const s=sub(c.id),list=items.filter(i=>s.includes(i.category_id)),pa=path(c.id);
+ return `<nav class="bc"><a href="#/">خانه</a>${pa.map((x,n)=>`<span>/</span>${n<pa.length-1?`<a href="#/c/${x.id}">${esc(x.name)}</a>`:`<b>${esc(x.name)}</b>`}`).join('')}</nav>
+ <h1>${esc(c.name)}</h1>${c.description?`<p class="lead">${esc(c.description)}</p>`:''}
+ ${kids(c.id).length?`<h2>زیرشاخه‌ها</h2><div class="panel">${tree(c.id,1)}</div>`:''}
+ ${admin?`<div class="acts"><button class="b pr" data-a="addc" data-id="${c.id}">+ افزودن محتوا</button><button class="b" data-a="addk" data-id="${c.id}">+ افزودن زیرشاخه</button><button class="b" data-a="editk" data-id="${c.id}">ویرایش</button><button class="b dg" data-a="delk" data-id="${c.id}">حذف</button></div>`:''}
+ <h2>محتواها (${fa(list.length)})</h2>${grid(list)}`}
+
+function search(P){
+ const q=norm(P.get('q')).trim(),t=P.get('t')||'',a=P.get('a')||'',c=P.get('c')||'',s=c?sub(c):null,ages=[...new Set(items.map(i=>i.age_group).filter(Boolean))];
+ const r=items.filter(i=>(!t||i.type===t)&&(!a||i.age_group===a)&&(!s||s.includes(i.category_id))&&q.split(/\s+/).every(w=>norm([i.title,i.summary,i.objective,i.body,i.type,i.source,path(i.category_id).map(x=>x.name).join(' '),(i.tags||[]).join(' ')].join(' ')).includes(w)));
+ return `<h1>جستجو و فیلتر</h1><div class="filters">
+ <select data-fl="t"><option value="">همه انواع محتوا</option>${TYPES.map(x=>`<option${x===t?' selected':''}>${x}</option>`).join('')}</select>
+ <select data-fl="a"><option value="">همه گروه‌های سنی</option>${ages.map(x=>`<option${x===a?' selected':''}>${esc(x)}</option>`).join('')}</select>
+ <select data-fl="c">${opts(c,[],'<option value="">همه دسته‌ها و زیرشاخه‌ها</option>')}</select></div>
+ <p class="meta">${fa(r.length)} نتیجه</p>${grid(r)}`}
+
+async function route(){
+ document.body.classList.remove('mo');
+ const [p,q=''] = location.hash.slice(2).split('?'),[a,id]=p.split('/'),P=new URLSearchParams(q),A=$('#app');
+ $('#tw').innerHTML=tree(null,0);
+ if(a==='s'&&$('#q').value!==(P.get('q')||''))$('#q').value=P.get('q')||'';
+ if(a==='login')A.innerHTML=`<section class="narrow"><h1>ورود مدیر</h1><form data-f="l"><label>ایمیل<input name="email" type="email" dir="ltr" required></label><label>رمز عبور<input name="password" type="password" dir="ltr" required></label><button class="b pr">ورود</button></form></section>`;
+ else if(a==='admin'&&admin)A.innerHTML=`<h1>مدیریت</h1><div class="acts"><button class="b pr" data-a="addk" data-id="">+ افزودن دسته‌بندی</button></div><div class="panel"><h2>پشتیبان‌گیری</h2><p class="lead">یک فایل کامل از همه دسته‌ها و محتواها بگیرید یا فایل پشتیبان را برگردانید.</p><div class="acts"><button class="b" data-a="exp">خروجی گرفتن از اطلاعات</button><button class="b" data-a="imp0">وارد کردن اطلاعات</button></div></div><input type="file" id="fi" accept=".json,application/json" hidden>`;
+ else if(a==='c'&&byId(id))A.innerHTML=catPage(byId(id));
+ else if(a==='s')A.innerHTML=search(P);
+ else A.innerHTML=home()}
+
+const fld=(n,l,v='',k='i')=>`<label>${l}${k==='t'?`<textarea name="${n}" rows="${n==='body'?8:3}">${esc(v)}</textarea>`:`<input name="${n}" value="${esc(v)}"${n==='title'||n==='name'?' required':''}${n==='age_group'?' list="ages"':''}${n==='source_url'?' dir="ltr"':''}>`}</label>`;
+function cform(id,catId){
+ const i=items.find(x=>x.id===id)||{};
+ modal(`<h2>${id?'ویرایش محتوا':'افزودن محتوا'}</h2><form data-f="c" data-id="${id||''}">${fld('title','عنوان محتوا *',i.title)}
+ <label>نوع محتوا<select name="type">${TYPES.map(t=>`<option${t===i.type?' selected':''}>${t}</option>`).join('')}</select></label>
+ <label>دسته / زیرشاخه *<select name="category_id" required>${opts(i.category_id||catId)}</select></label>
+ ${fld('summary','توضیح کوتاه',i.summary,'t')}${fld('objective','هدف آموزشی',i.objective,'t')}${fld('body','متن کامل',i.body,'t')}
+ ${fld('age_group','گروه سنی',i.age_group)}<datalist id="ages"><option>کودکان</option><option>نوجوانان</option><option>همه سنین</option></datalist>
+ ${fld('duration','مدت زمان',i.duration)}${fld('materials','وسایل مورد نیاز',i.materials,'t')}${fld('source','منبع',i.source)}${fld('source_url','لینک منبع',i.source_url)}
+ ${fld('notes','یادداشت شخصی (فقط مدیر می‌بیند)',i.notes,'t')}${fld('tags','برچسب‌ها (با ویرگول جدا کنید)',(i.tags||[]).join('، '))}
+ <div class="acts"><button class="b pr">ذخیره</button><button type="button" class="b" data-a="x">انصراف</button></div></form>`)}
+function kform(id,parent){
+ const c=byId(id)||{};
+ modal(`<h2>${id?'ویرایش دسته':parent?'افزودن زیرشاخه':'افزودن دسته‌بندی'}</h2><form data-f="k" data-id="${id||''}">${fld('name','نام *',c.name)}${fld('description','توضیح',c.description,'t')}
+ <label>دسته والد<select name="parent_id">${opts(id?c.parent_id:parent,id?sub(id):[],'<option value="">— بدون والد (دسته اصلی) —</option>')}</select></label>
+ <div class="acts"><button class="b pr">ذخیره</button><button type="button" class="b" data-a="x">انصراف</button></div></form>`)}
+function view(id){
+ const i=items.find(x=>x.id===id);if(!i)return;
+ const row=(l,v)=>v?`<h4>${l}</h4><p class="pre">${esc(v)}</p>`:'';
+ modal(`<h2>${esc(i.title)}</h2><div class="tags"><span class="chip ty">${esc(i.type)}</span>${path(i.category_id).map(c=>`<span class="chip">${esc(c.name)}</span>`).join('')}</div>
+ ${row('توضیح کوتاه',i.summary)}${row('هدف آموزشی',i.objective)}${row('متن کامل',i.body)}${row('گروه سنی',i.age_group)}${row('مدت زمان',i.duration)}${row('وسایل مورد نیاز',i.materials)}${row('منبع',i.source)}
+ ${/^https?:\/\//i.test(i.source_url||'')?`<p><a href="${esc(i.source_url)}" target="_blank" rel="noopener">لینک منبع</a></p>`:''}${admin?row('یادداشت شخصی',i.notes):''}
+ <div class="tags">${(i.tags||[]).map(t=>`<span class="chip">${esc(t)}</span>`).join('')}</div><p class="meta">تاریخ افزودن: ${dt(i.created_at)}</p><button class="b" data-a="x">بستن</button>`)}
+
+async function del(id){
+ const i=items.find(x=>x.id===id);if(!confirm(`«${i.title}» حذف شود؟ این کار برگشت‌پذیر نیست.`))return;
+ const r=await db.from('contents').delete().eq('id',id);if(r.error)throw r.error;toast('حذف شد');await refresh()}
+async function delk(id){
+ const c=byId(id),s=sub(id),n=items.filter(i=>s.includes(i.category_id)).length;
+ if(!confirm(`دسته «${c.name}» حذف شود؟`+(s.length>1||n?`\n\nهشدار: همراه آن ${fa(s.length-1)} زیرشاخه و ${fa(n)} محتوا نیز برای همیشه حذف می‌شود.`:'')))return;
+ const r=await db.from('categories').delete().eq('id',id);if(r.error)throw r.error;
+ await load();location.hash=c.parent_id?'#/c/'+c.parent_id:'#/';await route();toast('حذف شد')}
+function exp(){
+ const b=new Blob([JSON.stringify({version:1,categories:cats,contents:items},null,1)],{type:'application/json'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(b);a.download='namaz-bank-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+async function imp(f){
+ if(!f)return;const d=JSON.parse(await f.text());
+ if(!Array.isArray(d.categories)||!Array.isArray(d.contents))throw Error('فایل پشتیبان معتبر نیست');
+ if(!confirm(`${fa(d.categories.length)} دسته و ${fa(d.contents.length)} محتوا وارد شود؟ موارد هم‌شناسه به‌روزرسانی می‌شوند.`))return;
+ for(const [t,rows] of [['categories',d.categories.map(c=>({...c,parent_id:null}))],['categories',d.categories],['contents',d.contents]])
+  for(let n=0;n<rows.length;n+=200){const r=await db.from(t).upsert(rows.slice(n,n+200));if(r.error)throw r.error}
+ toast('اطلاعات وارد شد');await refresh()}
+
+const A={
+ x:()=>$('#modal').innerHTML='',menu:()=>document.body.classList.toggle('mo'),view,del,delk,exp,
+ edit:id=>cform(id),addc:id=>cform('',id),addk:id=>kform('',id),editk:id=>kform(id),imp0:()=>$('#fi').click(),
+ lg:async()=>{if(sess){await db.auth.signOut();await chk();location.hash='#/';await route()}else location.hash='#/login'}};
+document.addEventListener('click',e=>{
+ if(e.target.closest('#tw a'))document.body.classList.remove('mo');
+ const b=e.target.closest('[data-a]');if(!b)return;
+ if(b.dataset.a==='xo'){if(b===e.target)A.x();return}
+ run(()=>A[b.dataset.a]?.(b.dataset.id))});
+document.addEventListener('submit',e=>{e.preventDefault();run(async()=>{
+ const f=e.target,d=Object.fromEntries(new FormData(f)),id=f.dataset.id,k=f.dataset.f;let r;
+ if(k==='l'){r=await db.auth.signInWithPassword({email:d.email.trim(),password:d.password});if(r.error)throw r.error;await chk();location.hash='#/';await route();toast('وارد شدید');return}
+ if(k==='c'){d.tags=d.tags.split(/[,،]/).map(s=>s.trim()).filter(Boolean);d.source_url=d.source_url.trim();r=id?await db.from('contents').update(d).eq('id',id):await db.from('contents').insert(d)}
+ if(k==='k'){d.parent_id=d.parent_id||null;if(!id)d.sort=kids(d.parent_id).length+1;r=id?await db.from('categories').update(d).eq('id',id):await db.from('categories').insert(d)}
+ if(r.error)throw r.error;await refresh();A.x();toast('ذخیره شد')})});
+document.addEventListener('change',e=>{
+ if(e.target.id==='fi'){const f=e.target.files[0];e.target.value='';run(()=>imp(f));return}
+ const s=e.target.dataset.fl;if(!s)return;
+ const P=new URLSearchParams(location.hash.split('?')[1]||'');P.set(s,e.target.value);location.hash='#/s?'+P});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')A.x()});
+$('#q').addEventListener('input',()=>{clearTimeout(qt);qt=setTimeout(()=>{
+ const P=new URLSearchParams(location.hash.startsWith('#/s?')?location.hash.split('?')[1]:'');P.set('q',$('#q').value.trim());location.hash='#/s?'+P},250)});
+
+(async()=>{
+ if(!C.url||!C.key){$('#app').innerHTML='<div class="panel"><h2>راه‌اندازی هنوز کامل نشده</h2><p>فایل config.js را طبق راهنمای README تکمیل کنید.</p></div>';return}
+ try{db=supabase.createClient(C.url.trim(),C.key.trim());await chk();await route()}
+ catch(x){$('#app').innerHTML=`<div class="panel"><h2>اتصال به دیتابیس برقرار نشد</h2><p>${esc(x.message)}</p><p>آدرس و کلید داخل config.js و اجرای کامل schema.sql را بررسی کنید.</p></div>`}
+ addEventListener('hashchange',()=>run(async()=>{await route();scrollTo(0,0)}));
+})();
+</script>
+</body>
+</html>
